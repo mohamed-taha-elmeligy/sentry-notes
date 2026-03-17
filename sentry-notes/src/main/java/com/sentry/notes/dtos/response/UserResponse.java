@@ -1,4 +1,13 @@
 package com.sentry.notes.dtos.response;
 
-public class UserResponse {
-}
+import com.sentry.notes.entities.Note;
+import com.sentry.notes.enums.Role;
+
+import java.util.Set;
+
+public record UserResponse (
+        Long id,
+        String username,
+        Role role,
+        Set<Note> notes)
+{}

@@ -6,48 +6,53 @@ import lombok.*;
 import java.util.Objects;
 
 @Table(name = "notes", indexes = {
-        @Index(name = "idx_notes_name",columnList = "name")}
+        @Index(name = "idx_notes_name",columnList = "title")}
 )
 @Entity()
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
-public class Notes implements Comparable<Notes> {
+@Builder
+public class Note{
 
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter @Column(name ="name", nullable = false)
-    private String name;
+    @Setter @Column(name ="title", nullable = false, length = 200)
+    private String title;
 
     @Setter @Column(name ="content")
     private String content;
 
     @Setter @Column(name ="is_public", nullable = false)
-    private boolean isPublic;
+    private Boolean publicNote;
 
-    @Setter
-    @ManyToOne()
-    @JoinColumn(name = "user_id",referencedColumnName = "")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-
-
-    @Override
-    public int compareTo(@NonNull Notes ather) {
-        return this.id.compareTo(ather.getId());
-    }
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (!(object instanceof Notes notes)) return false;
+        if (!(object instanceof Note notes)) return false;
         return Objects.equals(id, notes.id);
     }
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "id=" + id +
+                ", name='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", publicNote=" + publicNote +
+                ", user=" + user +
+                '}';
     }
 }
