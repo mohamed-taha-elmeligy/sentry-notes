@@ -7,6 +7,7 @@ import java.util.Collection;
 
 
 public record CustomUserDetails(
+        Long userId,
         String username,
         String password,
         Collection<? extends GrantedAuthority> authorities)
