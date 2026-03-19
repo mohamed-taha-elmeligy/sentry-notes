@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,8 @@ public class NoteController {
 
     @PostMapping("/create")
     public ResponseEntity<NoteResponse> createNote(@Valid @RequestBody NoteRequest noteRequest){
-        return ResponseEntity.ok(
-                noteAppService.createNote(noteRequest)
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(noteAppService.createNote(noteRequest)
         );
     }
 
