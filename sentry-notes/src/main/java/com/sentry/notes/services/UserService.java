@@ -10,14 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @AllArgsConstructor
 @Slf4j
 @Service
 public class UserService {
+
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
+    private static final String USER_NOT_FOUND = "User not found: ";
 
     @Transactional(readOnly = true)
     public Page<User> getAllUsers(int numberOfPage, int numberOfSize){
@@ -27,8 +27,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findByUserName(String username){
-        return userRepository.findByUsername(username);
+    public User findByUserName(String username){
+        return userRepository.findByUsername(username)
+                .orElseThrow(()-> new RuntimeException(USER_NOT_FOUND + username));
     }
 
     public User createUser(User user){
@@ -46,7 +47,7 @@ public class UserService {
                     existUser.partialUpdate(user);
                     return existUser;
                 })
-                .orElseThrow(()-> new RuntimeException("User not found: " + user.getUsername()));
+                .orElseThrow(()-> new RuntimeException(USER_NOT_FOUND + user.getUsername()));
     }
 
     @Transactional
@@ -56,7 +57,7 @@ public class UserService {
                     userRepository.delete(user);
                     return user;
                 })
-                .orElseThrow(()-> new RuntimeException("User not found: " + id));
+                .orElseThrow(()-> new RuntimeException(USER_NOT_FOUND + id));
     }
 
 }

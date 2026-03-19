@@ -5,6 +5,7 @@ import com.sentry.notes.dtos.response.NoteResponse;
 import com.sentry.notes.entities.Note;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
 
 @Mapper(componentModel = "spring")
 public interface NoteMapper {
@@ -13,4 +14,8 @@ public interface NoteMapper {
     Note toEntity(NoteRequest notesRequest);
 
     NoteResponse toResponse(Note note);
+
+    default Page<NoteResponse> toResponse(Page<Note> note){
+        return note.map(this::toResponse);
+    }
 }
