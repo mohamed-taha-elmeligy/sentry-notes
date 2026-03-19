@@ -6,6 +6,7 @@ import com.sentry.notes.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public Page<User> getAllUsers(int numberOfPage, int numberOfSize){
@@ -30,6 +32,7 @@ public class UserService {
     }
 
     public User createUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -37,6 +40,9 @@ public class UserService {
     public User updateUser(User user){
         return userRepository.findById(user.getId())
                 .map(existUser -> {
+                    if (user.getPassword() != null) {
+                        user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    }
                     existUser.partialUpdate(user);
                     return existUser;
                 })
