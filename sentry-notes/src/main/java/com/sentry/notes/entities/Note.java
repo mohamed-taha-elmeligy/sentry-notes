@@ -6,7 +6,8 @@ import lombok.*;
 import java.util.Objects;
 
 @Table(name = "notes", indexes = {
-        @Index(name = "idx_notes_name",columnList = "title")}
+        @Index(name = "idx_notes_name",columnList = "title")},
+        uniqueConstraints = @UniqueConstraint(name = "user_title", columnNames = {"title","user_id"})
 )
 @Entity()
 
@@ -34,6 +35,16 @@ public class Note{
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void partialUpdate(Note note){
+        if(note.title != null && !note.title.isBlank())
+            this.title = note.title;
+
+        if(note.content != null && !note.content.isBlank())
+            this.content = note.content;
+
+        this.publicNote = note.publicNote;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -45,14 +56,4 @@ public class Note{
         return Objects.hashCode(id);
     }
 
-    @Override
-    public String toString() {
-        return "Note{" +
-                "id=" + id +
-                ", name='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", publicNote=" + publicNote +
-                ", user=" + user +
-                '}';
-    }
 }

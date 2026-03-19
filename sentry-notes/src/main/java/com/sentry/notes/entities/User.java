@@ -34,7 +34,10 @@ public class User{
     @Setter
     private Role role;
 
-    @OneToMany(fetch = FetchType.LAZY ,mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY ,mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Set<Note> notes = new HashSet<>();
 
     @Builder
@@ -50,6 +53,19 @@ public class User{
         this.notes.add(note);
     }
 
+    public void partialUpdate(User updatedInfo) {
+        if (updatedInfo.username != null && !updatedInfo.username.isBlank()) {
+            this.username = updatedInfo.username;
+        }
+        if (updatedInfo.password != null && !updatedInfo.password.isBlank()) {
+            this.password = updatedInfo.password;
+        }
+
+        if (updatedInfo.role != null) {
+            this.role = updatedInfo.role;
+        }
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -59,14 +75,5 @@ public class User{
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", role=" + role +
-                '}';
     }
 }
