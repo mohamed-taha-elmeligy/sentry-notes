@@ -2,6 +2,7 @@ package com.sentry.notes.services;
 
 import com.sentry.notes.config.PageableConfig;
 import com.sentry.notes.entities.User;
+import com.sentry.notes.exceptions.ResourceNotFoundException;
 import com.sentry.notes.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,18 +19,19 @@ public class UserService {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private static final String USER_NOT_FOUND = "User not found: ";
+    private static final String ID = "id";
 
     @Transactional(readOnly = true)
     public Page<User> getAllUsers(int numberOfPage, int numberOfSize){
         return userRepository.getAll(
-                PageableConfig.pageable(numberOfPage,numberOfSize,"id")
+                PageableConfig.pageable(numberOfPage,numberOfSize,ID)
         );
     }
 
     @Transactional(readOnly = true)
     public User findByUserName(String username){
         return userRepository.findByUsername(username)
-                .orElseThrow(()-> new RuntimeException(USER_NOT_FOUND + username));
+                .orElseThrow(()-> new ResourceNotFoundException(USER_NOT_FOUND + username));
     }
 
     public User createUser(User user){
@@ -47,7 +49,7 @@ public class UserService {
                     existUser.partialUpdate(user);
                     return existUser;
                 })
-                .orElseThrow(()-> new RuntimeException(USER_NOT_FOUND + user.getUsername()));
+                .orElseThrow(()-> new ResourceNotFoundException(USER_NOT_FOUND + user.getUsername()));
     }
 
     @Transactional
@@ -57,7 +59,7 @@ public class UserService {
                     userRepository.delete(user);
                     return user;
                 })
-                .orElseThrow(()-> new RuntimeException(USER_NOT_FOUND + id));
+                .orElseThrow(()-> new ResourceNotFoundException(USER_NOT_FOUND + id));
     }
 
 }

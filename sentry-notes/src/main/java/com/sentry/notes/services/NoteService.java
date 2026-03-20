@@ -2,6 +2,7 @@ package com.sentry.notes.services;
 
 import com.sentry.notes.config.PageableConfig;
 import com.sentry.notes.entities.Note;
+import com.sentry.notes.exceptions.ResourceNotFoundException;
 import com.sentry.notes.repositories.NoteRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class NoteService {
     private NoteRepository noteRepository;
+    private static final String TITLE = "title";
+    private static final String NOTE_NOT_FOUND = "Note not found with title: ";
 
     public Note createNote(Note note){
         return noteRepository.save(note);
@@ -26,28 +29,32 @@ public class NoteService {
                     existNote.partialUpdate(note);
                     return existNote;
                 })
-                .orElseThrow(() -> new RuntimeException("Note not found: " + note.getTitle()));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(NOTE_NOT_FOUND+ note.getTitle())
+                );
     }
 
     @Transactional(readOnly = true)
     public Page<Note> getPublicNotes(int numberOfPage, int numberOfSize){
         return noteRepository.
                 getByPublicNoteTrue(
-                        PageableConfig.pageable(numberOfPage,numberOfSize,"title")
+                        PageableConfig.pageable(numberOfPage,numberOfSize,TITLE)
                 );
     }
 
     @Transactional(readOnly = true)
     public Page<Note> findByUserId(Long userId, int numberOfPage, int numberOfSize){
         return noteRepository.findByUserId(userId,
-                PageableConfig.pageable(numberOfPage,numberOfSize,"title")
+                PageableConfig.pageable(numberOfPage,numberOfSize,TITLE)
         );
     }
 
     @Transactional(readOnly = true)
     public Note findByTitleAndUserId(String title, Long userId){
         return noteRepository.findByTitleAndUserId(title, userId)
-                .orElseThrow(() -> new RuntimeException("Note not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(NOTE_NOT_FOUND + title)
+                );
     }
 
     @Transactional
@@ -57,7 +64,9 @@ public class NoteService {
                     noteRepository.delete(note);
                     return note;
                 })
-                .orElseThrow(() -> new RuntimeException("Note not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(NOTE_NOT_FOUND + title)
+                );
     }
 
 
