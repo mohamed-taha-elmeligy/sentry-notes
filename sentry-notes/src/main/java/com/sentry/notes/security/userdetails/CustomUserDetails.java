@@ -1,5 +1,6 @@
 package com.sentry.notes.security.userdetails;
 
+import com.sentry.notes.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,6 +9,7 @@ import java.util.Collection;
 
 public record CustomUserDetails(
         Long userId,
+        Role role,
         String username,
         String password,
         Collection<? extends GrantedAuthority> authorities)

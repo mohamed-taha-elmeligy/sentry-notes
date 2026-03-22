@@ -27,4 +27,11 @@ public abstract class AppPointCuts {
     // ===== Public Controller point cut =====
     @Pointcut(value = "execution(*.com.sentry.notes.controllers.PublicController.*(..))")
     public void publicController(){}
+
+    // ===== Security   =====
+    @Pointcut(value = "@annotation(RequireOwnership)")
+    public void requireOwnership(){}
+
+    @Pointcut(value = "@annotation(RequireRole)")
+    public void requireRole(){}
 }
