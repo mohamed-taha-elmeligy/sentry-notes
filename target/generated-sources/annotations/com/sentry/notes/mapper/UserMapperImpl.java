@@ -1,6 +1,7 @@
 package com.sentry.notes.mapper;
 
 import com.sentry.notes.dtos.request.UserRequest;
+import com.sentry.notes.dtos.response.NoteResponse;
 import com.sentry.notes.dtos.response.UserResponse;
 import com.sentry.notes.entities.Note;
 import com.sentry.notes.entities.User;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-03-20T22:39:26+0200",
+    date = "2026-03-23T22:15:20+0200",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.4 (Oracle Corporation)"
 )
 @Component
@@ -41,18 +42,48 @@ public class UserMapperImpl implements UserMapper {
         Long id = null;
         String username = null;
         Role role = null;
-        Set<Note> notes = null;
+        Set<NoteResponse> notes = null;
 
         id = user.getId();
         username = user.getUsername();
         role = user.getRole();
-        Set<Note> set = user.getNotes();
-        if ( set != null ) {
-            notes = new LinkedHashSet<Note>( set );
-        }
+        notes = noteSetToNoteResponseSet( user.getNotes() );
 
         UserResponse userResponse = new UserResponse( id, username, role, notes );
 
         return userResponse;
+    }
+
+    protected NoteResponse noteToNoteResponse(Note note) {
+        if ( note == null ) {
+            return null;
+        }
+
+        Long id = null;
+        String title = null;
+        String content = null;
+        Boolean publicNote = null;
+
+        id = note.getId();
+        title = note.getTitle();
+        content = note.getContent();
+        publicNote = note.getPublicNote();
+
+        NoteResponse noteResponse = new NoteResponse( id, title, content, publicNote );
+
+        return noteResponse;
+    }
+
+    protected Set<NoteResponse> noteSetToNoteResponseSet(Set<Note> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<NoteResponse> set1 = new LinkedHashSet<NoteResponse>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( Note note : set ) {
+            set1.add( noteToNoteResponse( note ) );
+        }
+
+        return set1;
     }
 }

@@ -52,4 +52,14 @@ public class PublicController {
         );
     }
 
+    @GetMapping("/check")
+    public String checkApi(){
+        return """
+                Hi my name is Mohamed Taha,
+                I am Backend Software Developer.
+                
+                This API is Good
+                """;
+    }
+
 }

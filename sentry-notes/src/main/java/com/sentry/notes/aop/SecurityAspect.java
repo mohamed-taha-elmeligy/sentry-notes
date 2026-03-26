@@ -7,7 +7,6 @@ import com.sentry.notes.entities.User;
 import com.sentry.notes.exceptions.ForbiddenException;
 import com.sentry.notes.exceptions.UnauthorizedException;
 import com.sentry.notes.security.userdetails.CustomUserDetails;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -22,10 +21,7 @@ import java.util.Arrays;
 @Component
 @Slf4j
 @Order(1)
-@AllArgsConstructor
 public class SecurityAspect extends AppPointCuts {
-
-    private final SecurityContextHolder contextHolder;
 
     @Around("requireOwnership()")
     public Object checkOwnership(ProceedingJoinPoint joinPoint) throws Throwable{

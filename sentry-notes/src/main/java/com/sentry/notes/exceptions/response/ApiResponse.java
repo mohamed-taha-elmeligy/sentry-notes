@@ -1,6 +1,5 @@
 package com.sentry.notes.exceptions.response;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
@@ -13,15 +12,20 @@ public class ApiResponse{
     private final String message;
     private final String error;
     private final String timestamp;
-    private final int httpStatus;
+    private final int status;
     private final String traceId;
+    private final String path;
 
-    @Builder
-    public ApiResponse(@NonNull String message,HttpStatus httpStatus) {
+    public ApiResponse(@NonNull String message, HttpStatus status, String path) {
         this.message = message;
-        this.error = httpStatus.getReasonPhrase();
+        this.error = status.getReasonPhrase();
+        this.path = path;
         this.timestamp = Instant.now().toString();
-        this.httpStatus = httpStatus.value();
+        this.status = status.value();
         this.traceId = UUID.randomUUID().toString();
+    }
+
+    public ApiResponse(@NonNull String message,HttpStatus status) {
+        this(message,status,null);
     }
 }
