@@ -1,6 +1,5 @@
 package com.sentry.notes.controllers;
 
-
 import com.sentry.notes.appservice.UserAppService;
 import com.sentry.notes.dtos.request.UserRequest;
 import com.sentry.notes.dtos.response.UserResponse;
