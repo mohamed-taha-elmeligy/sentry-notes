@@ -23,7 +23,6 @@ public class UserController {
     private UserAppService userAppService;
     private static final String NUMBER_OF_SIZE ="The page size can range from 10 to 20 records";
     private static final String NUMBER_OF_PAGE ="The number of pages can range from 1 to 10 pages";
-    private static final String TITLE_CANNOT_NULL ="The title can not be null";
 
     @GetMapping("/{numberOfPage}/{numberOfSize}")
     public ResponseEntity<Page<UserResponse>> getAllUsers(
