@@ -52,11 +52,12 @@ public class UserController {
         );
     }
 
-    @PutMapping("update")
+    @PutMapping("/update")
     public ResponseEntity<UserResponse> updateUser(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @Valid @RequestBody UserRequest userRequest){
         return ResponseEntity.ok(
-                userAppService.updateUser(userRequest)
+                userAppService.updateUser(customUserDetails.userId(),userRequest)
         );
     }
 

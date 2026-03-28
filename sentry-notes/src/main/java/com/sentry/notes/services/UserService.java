@@ -61,5 +61,4 @@ public class UserService {
                 })
                 .orElseThrow(()-> new ResourceNotFoundException(USER_NOT_FOUND + id));
     }
-
 }

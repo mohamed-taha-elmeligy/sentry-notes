@@ -2,6 +2,7 @@ package com.sentry.notes.appservice;
 
 import com.sentry.notes.dtos.request.UserRequest;
 import com.sentry.notes.dtos.response.UserResponse;
+import com.sentry.notes.entities.User;
 import com.sentry.notes.mapper.UserMapper;
 import com.sentry.notes.services.UserService;
 import lombok.AllArgsConstructor;
@@ -35,11 +36,11 @@ public class UserAppService {
         );
     }
 
-    public UserResponse updateUser(UserRequest userRequest){
+    public UserResponse updateUser(Long userId, UserRequest userRequest){
+        User userUpdateInfo = userMapper.toEntity(userRequest);
+        userUpdateInfo.setId(userId);
         return userMapper.toResponse(
-                userService.updateUser(
-                        userMapper.toEntity(userRequest)
-                )
+                userService.updateUser(userUpdateInfo)
         );
     }
 
