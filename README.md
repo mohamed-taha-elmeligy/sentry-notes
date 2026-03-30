@@ -1,6 +1,6 @@
 # Sentry-Notes
 
-A RESTful API for managing personal notes, built with **Java 17** and **Spring Boot 3**, applying **Clean Architecture** and **Domain-Driven Design (DDD)** principles.
+A RESTful API for managing personal notes, built with **Java 19** and **Spring Boot 3**, applying **Clean Architecture** and **Domain-Driven Design (DDD)** principles.
 
 ---
 
