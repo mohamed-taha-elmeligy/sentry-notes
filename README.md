@@ -25,7 +25,7 @@ Controller → AppService → DomainService → Repository
 
 ## Tech Stack
 
-- **Java 17**
+- **Java 19**
 - **Spring Boot 3**
 - **Spring Security** — JWT-based stateless authentication
 - **Spring Data JPA** — ORM with Hibernate
